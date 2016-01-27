@@ -8,7 +8,7 @@ namespace GitServerSample
 {
     static class Program
     {
-        internal static string GitExe = @"C:\Program Files (x86)\Git\cmd\git.exe";
+        internal static string GitExe = @"C:\Program Files\Git\bin\git.exe";
         internal static string RepositoryPath;
 
         // initialize git repo as follow
@@ -18,11 +18,16 @@ namespace GitServerSample
         // > git config receive.denyCurrentBranch ignore
         static void Main(string[] args)
         {
+            if (Environment.OSVersion.Platform == PlatformID.Unix || Environment.OSVersion.Platform == PlatformID.Unix)
+            {
+                GitExe = "/usr/bin/git";
+            }
+
             try
             {
                 RepositoryPath = args[0];
                 var port = Int32.Parse(args[1]);
-                string prefix = String.Format("http://*:{0}/", port);
+                string prefix = String.Format("http://localhost:{0}/", port);
                 var listener = new HttpListener();
                 listener.Prefixes.Add(prefix);
                 listener.Start();
